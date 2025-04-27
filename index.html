@@ -336,22 +336,25 @@
   </div>
 
   <script>
+    const loadingOverlay = document.querySelector('.loading-overlay');
+
+    // Hide loading overlay after the page loads
+    window.onload = function() {
+      // Set a timeout to remove the loading overlay after 10 seconds
+      setTimeout(() => {
+        loadingOverlay.style.opacity = '0'; // Fade out the overlay
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none'; // Actually hide the overlay
+        }, 1000); // Wait for the opacity transition to complete
+      }, 10000); // Delay for 10 seconds (10000ms)
+    };
+
+    // Event listeners for navigation tabs
     const homeTab = document.getElementById("homeTab");
     const gamesTab = document.getElementById("gamesTab");
     const searchTab = document.getElementById("searchTab");
     const gamesContent = document.getElementById("gamesContent");
 
-    // Hide loading overlay after the page loads
-    window.onload = function() {
-      setTimeout(() => {
-        loadingOverlay.style.opacity = '0';
-        setTimeout(() => {
-          loadingOverlay.style.display = 'none';
-        }, 1000); // Wait for opacity transition to complete
-      }, 500); // Add some delay to allow animations to run
-    };
-
-    // Event listeners for navigation tabs
     homeTab.addEventListener("click", function() {
       gamesContent.classList.remove("active");
       homeTab.classList.add("active");
