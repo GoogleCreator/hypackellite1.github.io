@@ -312,6 +312,12 @@
     </div>
   </div>
 
+  <!-- Iframe Overlay for opening games -->
+  <div id="iframeOverlay">
+    <button id="closeGame">Close</button>
+    <iframe id="gameIframe" src=""></iframe>
+  </div>
+
   <script>
     const loadingOverlay = document.querySelector('.loading-overlay');
 
@@ -359,8 +365,25 @@
         gameButton.appendChild(imageWrapper);
 
         gamesList.appendChild(gameButton);
+
+        // Add event listener to open the game when clicked
+        gameButton.addEventListener('click', function() {
+          const gameSrc = gameButton.dataset.src;
+          const iframe = document.getElementById('gameIframe');
+          const iframeOverlay = document.getElementById('iframeOverlay');
+          iframe.src = gameSrc;
+          iframeOverlay.style.display = 'flex';
+        });
       });
     }
+
+    // Close the iframe overlay when the close button is clicked
+    document.getElementById('closeGame').addEventListener('click', function() {
+      const iframe = document.getElementById('gameIframe');
+      const iframeOverlay = document.getElementById('iframeOverlay');
+      iframe.src = '';
+      iframeOverlay.style.display = 'none';
+    });
 
     // Call the renderGames function to load the games initially
     renderGames(games);
