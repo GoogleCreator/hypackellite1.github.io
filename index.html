@@ -306,31 +306,8 @@
   <div id="gamesContent" class="content-section">
     <div class="games-inner-wrapper">
       <input type="text" class="search-bar" id="searchGames" placeholder="Search games..." />
-      <div class="games-list">
-        <div class="game-button" data-src="/play/liquid/liquid.html">
-          <div class="image-wrapper">
-            <img src="/img/liquid.jpg" alt="Liquid Soccer">
-            <div class="game-title">Liquid Soccer</div>
-          </div>
-        </div>
-        <div class="game-button" data-src="/play/tag/tag.html">
-          <div class="image-wrapper">
-            <img src="/img/splash.jpg" alt="Tag">
-            <div class="game-title">Tag</div>
-          </div>
-        </div>
-        <div class="game-button" data-src="/files/basketrandom/index.html">
-          <div class="image-wrapper">
-            <img src="/files/basketrandom/splash.jpeg" alt="Basket Random">
-            <div class="game-title">Basket Random</div>
-          </div>
-        </div>
-        <div class="game-button" data-src="/files/nzp-gay/index.html">
-          <div class="image-wrapper">
-            <img src="/img/cod.png" alt="COD Zombies">
-            <div class="game-title">COD Zombies</div>
-          </div>
-        </div>
+      <div class="games-list" id="gamesList">
+        <!-- Dynamic game buttons will appear here -->
       </div>
     </div>
   </div>
@@ -340,14 +317,53 @@
 
     // Hide loading overlay after the page loads
     window.onload = function() {
-      // Set a timeout to remove the loading overlay after 10 seconds
       setTimeout(() => {
-        loadingOverlay.style.opacity = '0'; // Fade out the overlay
+        loadingOverlay.style.opacity = '0';
         setTimeout(() => {
-          loadingOverlay.style.display = 'none'; // Actually hide the overlay
-        }, 1000); // Wait for the opacity transition to complete
-      }, 10000); // Delay for 10 seconds (10000ms)
+          loadingOverlay.style.display = 'none';
+        }, 1000);
+      }, 10000);
     };
+
+    // Define the list of games
+    const games = [
+      { title: "Liquid Soccer", src: "/play/liquid/liquid.html", img: "/img/liquid.jpg" },
+      { title: "Tag", src: "/play/tag/tag.html", img: "/img/splash.jpg" },
+      { title: "Basket Random", src: "/files/basketrandom/index.html", img: "/files/basketrandom/splash.jpeg" },
+      { title: "COD Zombies", src: "/files/nzp-gay/index.html", img: "/img/cod.png" }
+    ];
+
+    // Function to render the games dynamically
+    function renderGames(games) {
+      const gamesList = document.getElementById('gamesList');
+      gamesList.innerHTML = ''; // Clear existing content
+
+      games.forEach(game => {
+        const gameButton = document.createElement('div');
+        gameButton.classList.add('game-button');
+        gameButton.dataset.src = game.src;
+
+        const imageWrapper = document.createElement('div');
+        imageWrapper.classList.add('image-wrapper');
+
+        const img = document.createElement('img');
+        img.src = game.img;
+        img.alt = game.title;
+
+        const gameTitle = document.createElement('div');
+        gameTitle.classList.add('game-title');
+        gameTitle.textContent = game.title;
+
+        imageWrapper.appendChild(img);
+        imageWrapper.appendChild(gameTitle);
+        gameButton.appendChild(imageWrapper);
+
+        gamesList.appendChild(gameButton);
+      });
+    }
+
+    // Call the renderGames function to load the games initially
+    renderGames(games);
 
     // Event listeners for navigation tabs
     const homeTab = document.getElementById("homeTab");
@@ -367,6 +383,14 @@
       homeTab.classList.remove("active");
       gamesTab.classList.add("active");
       searchTab.classList.remove("active");
+    });
+
+    // Search functionality
+    const searchGames = document.getElementById('searchGames');
+    searchGames.addEventListener('input', function(event) {
+      const searchQuery = event.target.value.toLowerCase();
+      const filteredGames = games.filter(game => game.title.toLowerCase().includes(searchQuery));
+      renderGames(filteredGames); // Re-render games based on search query
     });
   </script>
 </body>
