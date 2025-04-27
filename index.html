@@ -6,6 +6,10 @@
   <title>Viper Revamped</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       background-color: #0d0d0d;
@@ -22,8 +26,8 @@
 
     .title-container {
       background-color: #0d0d0d;
-      border-radius: 1.5vw;
-      padding: 2vh 4vw;
+      border-radius: clamp(0.5rem, 1.5vw, 2rem);
+      padding: clamp(1rem, 2vh, 3rem) clamp(2rem, 4vw, 5rem);
       max-width: 80vw;
       text-align: center;
       visibility: hidden;
@@ -31,14 +35,13 @@
     }
 
     h1 {
-      font-size: 4vw;
+      font-size: clamp(1.5rem, 4vw, 3.5rem);
       background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: rainbow 10s linear infinite;
       margin: 0;
-      transition: all 0.3s ease-in-out;
       user-select: none;
     }
 
@@ -58,15 +61,15 @@
       top: 0;
       left: 0;
       background-color: #0d0d0d;
-      padding: 15px;
+      padding: clamp(10px, 2vh, 20px);
       z-index: 10;
     }
 
     .nav-tab {
       color: #fff;
-      padding: 10px 20px;
-      font-size: 1.2em;
-      border-radius: 8px;
+      padding: clamp(0.5rem, 1vh, 1rem) clamp(1rem, 2vw, 2rem);
+      font-size: clamp(1rem, 1.8vw, 1.5rem);
+      border-radius: clamp(0.5rem, 1vw, 1rem);
       cursor: pointer;
       transition: all 0.3s ease;
       text-align: center;
@@ -89,10 +92,6 @@
       margin-top: 5px;
     }
 
-    .nav-tab.active {
-      color: white;
-    }
-
     .nav-tab.active::after {
       width: 100%;
     }
@@ -109,7 +108,7 @@
       align-items: center;
       flex-direction: column;
       color: #00cc00;
-      font-size: 2vw;
+      font-size: clamp(1rem, 2vw, 2rem);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       z-index: 9999;
       backdrop-filter: blur(5px);
@@ -143,10 +142,10 @@
 
     .content-section {
       display: none;
-      padding: 20px;
+      padding: clamp(1rem, 2vh, 2rem);
       background-color: #0d0d0d;
       color: white;
-      border-radius: 10px;
+      border-radius: clamp(0.5rem, 1vw, 1rem);
       margin-top: 20px;
       max-width: 90vw;
       text-align: center;
@@ -184,13 +183,12 @@
     .search-bar {
       width: 80%;
       max-width: 500px;
-      padding: 10px;
-      border-radius: 8px;
+      padding: clamp(0.5rem, 1vh, 1rem);
+      border-radius: clamp(0.5rem, 1vw, 1rem);
       border: 1px solid #333;
       background-color: #222;
       color: white;
-      font-size: 1.2em;
-      display: block;
+      font-size: clamp(1rem, 1.2vw, 1.4rem);
       margin: 0 auto;
     }
 
@@ -205,7 +203,7 @@
     .game-button {
       display: inline-block;
       cursor: pointer;
-      border-radius: 15px;
+      border-radius: clamp(0.5rem, 1vw, 1rem);
       overflow: hidden;
       transition: transform 0.3s ease;
     }
@@ -220,10 +218,10 @@
     }
 
     .image-wrapper img {
-      width: 150px;
-      height: 150px;
+      width: clamp(100px, 15vw, 180px);
+      height: clamp(100px, 15vw, 180px);
       object-fit: cover;
-      border-radius: 15px;
+      border-radius: clamp(0.5rem, 1vw, 1rem);
       display: block;
       transition: all 0.3s ease;
     }
@@ -238,7 +236,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: white;
-      font-size: 1.1em;
+      font-size: clamp(0.8rem, 1vw, 1.1rem);
       font-weight: bold;
       text-shadow: 0 0 10px black;
       opacity: 0;
@@ -292,6 +290,21 @@
     #iframeOverlay button:hover {
       opacity: 1;
     }
+
+    @media (max-width: 600px) {
+      .nav-tabs {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .search-bar {
+        width: 90%;
+      }
+
+      .game-title {
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -311,17 +324,13 @@
     <div class="nav-tab" id="searchTab"><i class="fas fa-search"></i> Search</div>
   </div>
 
-  <!-- Games Section -->
   <div id="gamesContent" class="content-section">
     <div class="games-inner-wrapper">
       <input type="text" class="search-bar" id="searchGames" placeholder="Search games..." />
-      <div class="games-list" id="gamesList">
-        <!-- Dynamic game buttons will appear here -->
-      </div>
+      <div class="games-list" id="gamesList"></div>
     </div>
   </div>
 
-  <!-- Iframe Overlay for opening games -->
   <div id="iframeOverlay">
     <button id="closeGame">Close</button>
     <iframe id="gameIframe" src=""></iframe>
@@ -330,9 +339,8 @@
   <script>
     const loadingOverlay = document.querySelector('.loading-overlay');
     const titleContainer = document.querySelector('.title-container');
-    
-    // Hide loading overlay after the page loads
-    window.onload = function() {
+
+    window.onload = function () {
       setTimeout(() => {
         loadingOverlay.style.opacity = '0';
         setTimeout(() => {
@@ -343,7 +351,6 @@
       }, 10000);
     };
 
-    // Define the list of games
     const games = [
       { title: "Liquid Soccer", src: "/play/liquid/liquid.html", img: "/img/liquid.jpg" },
       { title: "Tag", src: "/play/tag/tag.html", img: "/img/splash.jpg" },
@@ -361,11 +368,9 @@
       { title: "Dogeminer 2", src: "/play/Dogeminer2/index.html", img: "/play/Dogeminer2/thumb.jpg" },
     ];
 
-    // Function to render the games dynamically
     function renderGames(games) {
       const gamesList = document.getElementById('gamesList');
-      gamesList.innerHTML = ''; // Clear existing content
-
+      gamesList.innerHTML = '';
       games.forEach(game => {
         const gameButton = document.createElement('div');
         gameButton.classList.add('game-button');
@@ -385,57 +390,50 @@
         imageWrapper.appendChild(img);
         imageWrapper.appendChild(gameTitle);
         gameButton.appendChild(imageWrapper);
-
         gamesList.appendChild(gameButton);
 
-        // Add event listener to open the game when clicked
-        gameButton.addEventListener('click', function() {
-          const gameSrc = gameButton.dataset.src;
+        gameButton.addEventListener('click', function () {
           const iframe = document.getElementById('gameIframe');
           const iframeOverlay = document.getElementById('iframeOverlay');
-          iframe.src = gameSrc;
+          iframe.src = game.src;
           iframeOverlay.style.display = 'flex';
         });
       });
     }
 
-    // Close the iframe overlay when the close button is clicked
-    document.getElementById('closeGame').addEventListener('click', function() {
+    document.getElementById('closeGame').addEventListener('click', function () {
       const iframe = document.getElementById('gameIframe');
       const iframeOverlay = document.getElementById('iframeOverlay');
       iframe.src = '';
       iframeOverlay.style.display = 'none';
     });
 
-    // Call the renderGames function to load the games initially
     renderGames(games);
 
-    // Event listeners for navigation tabs
     const homeTab = document.getElementById("homeTab");
     const gamesTab = document.getElementById("gamesTab");
     const searchTab = document.getElementById("searchTab");
     const gamesContent = document.getElementById("gamesContent");
 
-    homeTab.addEventListener("click", function() {
+    homeTab.addEventListener("click", function () {
       gamesContent.classList.remove("active");
       homeTab.classList.add("active");
       gamesTab.classList.remove("active");
       searchTab.classList.remove("active");
     });
 
-    gamesTab.addEventListener("click", function() {
+    gamesTab.addEventListener("click", function () {
       gamesContent.classList.add("active");
       homeTab.classList.remove("active");
       gamesTab.classList.add("active");
       searchTab.classList.remove("active");
     });
 
-    // Search functionality
     const searchGames = document.getElementById('searchGames');
-    searchGames.addEventListener('input', function(event) {
+    searchGames.addEventListener('input', function (event) {
       const searchQuery = event.target.value.toLowerCase();
       const filteredGames = games.filter(game => game.title.toLowerCase().includes(searchQuery));
-      renderGames(filteredGames); // Re-render games based on search query
+      renderGames(filteredGames);
     });
   </script>
 </body>
