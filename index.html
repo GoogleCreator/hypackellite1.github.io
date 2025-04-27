@@ -118,6 +118,20 @@
       transition: opacity 1s ease-out;
     }
 
+    #loadingText {
+      margin-bottom: 20px;
+      font-size: 1.8vw;
+      color: #00cc00;
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     .loading-bar-container {
       width: 80%;
       height: 10px;
@@ -296,6 +310,7 @@
 </head>
 <body>
   <div class="loading-overlay">
+    <div id="loadingText">Starting server...</div>
     <div class="loading-bar-container">
       <div class="loading-bar"></div>
     </div>
@@ -315,9 +330,7 @@
   <div id="gamesContent" class="content-section">
     <div class="games-inner-wrapper">
       <input type="text" class="search-bar" id="searchGames" placeholder="Search games..." />
-      <div class="games-list" id="gamesList">
-        <!-- Dynamic game buttons will appear here -->
-      </div>
+      <div class="games-list" id="gamesList"></div>
     </div>
   </div>
 
@@ -330,9 +343,24 @@
   <script>
     const loadingOverlay = document.querySelector('.loading-overlay');
     const titleContainer = document.querySelector('.title-container');
-    
-    // Hide loading overlay after the page loads
-    window.onload = function() {
+    const loadingText = document.getElementById('loadingText');
+
+    const loadingMessages = [
+      "Starting server...",
+      "Compiling scripts...",
+      "Adding games...",
+      "Initiating site..."
+    ];
+
+    window.onload = function () {
+      // Show each message every 2.5 seconds
+      loadingMessages.forEach((msg, index) => {
+        setTimeout(() => {
+          loadingText.textContent = msg;
+        }, index * 2500);
+      });
+
+      // Hide overlay after 10 seconds
       setTimeout(() => {
         loadingOverlay.style.opacity = '0';
         setTimeout(() => {
@@ -343,7 +371,6 @@
       }, 10000);
     };
 
-    // Define the list of games
     const games = [
       { title: "Liquid Soccer", src: "/play/liquid/liquid.html", img: "/img/liquid.jpg" },
       { title: "Tag", src: "/play/tag/tag.html", img: "/img/splash.jpg" },
@@ -361,11 +388,9 @@
       { title: "Dogeminer 2", src: "/play/Dogeminer2/index.html", img: "/play/Dogeminer2/thumb.jpg" },
     ];
 
-    // Function to render the games dynamically
     function renderGames(games) {
       const gamesList = document.getElementById('gamesList');
-      gamesList.innerHTML = ''; // Clear existing content
-
+      gamesList.innerHTML = '';
       games.forEach(game => {
         const gameButton = document.createElement('div');
         gameButton.classList.add('game-button');
@@ -385,57 +410,50 @@
         imageWrapper.appendChild(img);
         imageWrapper.appendChild(gameTitle);
         gameButton.appendChild(imageWrapper);
-
         gamesList.appendChild(gameButton);
 
-        // Add event listener to open the game when clicked
-        gameButton.addEventListener('click', function() {
-          const gameSrc = gameButton.dataset.src;
+        gameButton.addEventListener('click', function () {
           const iframe = document.getElementById('gameIframe');
           const iframeOverlay = document.getElementById('iframeOverlay');
-          iframe.src = gameSrc;
+          iframe.src = game.src;
           iframeOverlay.style.display = 'flex';
         });
       });
     }
 
-    // Close the iframe overlay when the close button is clicked
-    document.getElementById('closeGame').addEventListener('click', function() {
+    document.getElementById('closeGame').addEventListener('click', function () {
       const iframe = document.getElementById('gameIframe');
       const iframeOverlay = document.getElementById('iframeOverlay');
       iframe.src = '';
       iframeOverlay.style.display = 'none';
     });
 
-    // Call the renderGames function to load the games initially
     renderGames(games);
 
-    // Event listeners for navigation tabs
     const homeTab = document.getElementById("homeTab");
     const gamesTab = document.getElementById("gamesTab");
     const searchTab = document.getElementById("searchTab");
     const gamesContent = document.getElementById("gamesContent");
 
-    homeTab.addEventListener("click", function() {
+    homeTab.addEventListener("click", function () {
       gamesContent.classList.remove("active");
       homeTab.classList.add("active");
       gamesTab.classList.remove("active");
       searchTab.classList.remove("active");
     });
 
-    gamesTab.addEventListener("click", function() {
+    gamesTab.addEventListener("click", function () {
       gamesContent.classList.add("active");
       homeTab.classList.remove("active");
       gamesTab.classList.add("active");
       searchTab.classList.remove("active");
     });
 
-    // Search functionality
     const searchGames = document.getElementById('searchGames');
-    searchGames.addEventListener('input', function(event) {
+    searchGames.addEventListener('input', function (event) {
       const searchQuery = event.target.value.toLowerCase();
       const filteredGames = games.filter(game => game.title.toLowerCase().includes(searchQuery));
-      renderGames(filteredGames); // Re-render games based on search query
+      renderGames(filteredGames);
     });
   </script>
 </body>
