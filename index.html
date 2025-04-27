@@ -283,34 +283,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
-    #chatMessages {
-      color: white;
-      font-size: 1em;
-      max-height: 300px;
-      overflow-y: auto;
-      margin-bottom: 10px;
-    }
-
-    #chatInput {
-      width: 80%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background-color: #222;
-      color: white;
-      font-size: 1.2em;
-      display: block;
-      margin: 0 auto;
-    }
-
-    #chatForm {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
   </style>
 </head>
 <body>
@@ -328,7 +300,6 @@
     <div class="nav-tab" id="homeTab"><i class="fas fa-home"></i> Home</div>
     <div class="nav-tab" id="gamesTab"><i class="fas fa-gamepad"></i> Games</div>
     <div class="nav-tab" id="searchTab"><i class="fas fa-search"></i> Search</div>
-    <div class="nav-tab" id="chatTab"><i class="fas fa-comments"></i> Chat</div>
   </div>
 
   <!-- Games Section -->
@@ -364,24 +335,11 @@
     </div>
   </div>
 
-  <!-- Chat Section -->
-  <div id="chatContent" class="content-section">
-    <div id="chatMessages"></div>
-    <div id="chatForm">
-      <input type="text" id="chatInput" placeholder="Enter message..." />
-    </div>
-  </div>
-
   <script>
     const homeTab = document.getElementById("homeTab");
     const gamesTab = document.getElementById("gamesTab");
     const searchTab = document.getElementById("searchTab");
-    const chatTab = document.getElementById("chatTab");
     const gamesContent = document.getElementById("gamesContent");
-    const chatContent = document.getElementById("chatContent");
-    const loadingOverlay = document.querySelector(".loading-overlay");
-
-    let usernameSet = false;
 
     // Hide loading overlay after the page loads
     window.onload = function() {
@@ -396,48 +354,16 @@
     // Event listeners for navigation tabs
     homeTab.addEventListener("click", function() {
       gamesContent.classList.remove("active");
-      chatContent.classList.remove("active");
       homeTab.classList.add("active");
       gamesTab.classList.remove("active");
       searchTab.classList.remove("active");
-      chatTab.classList.remove("active");
     });
 
     gamesTab.addEventListener("click", function() {
       gamesContent.classList.add("active");
-      chatContent.classList.remove("active");
       homeTab.classList.remove("active");
       gamesTab.classList.add("active");
       searchTab.classList.remove("active");
-      chatTab.classList.remove("active");
-    });
-
-    chatTab.addEventListener("click", function() {
-      if (!usernameSet) {
-        let username = prompt("Enter your username:");
-        if (username) {
-          usernameSet = true;
-          chatTab.classList.add("active");
-        } else {
-          alert("You need to provide a username to chat.");
-        }
-      } else {
-        gamesContent.classList.remove("active");
-        chatContent.classList.add("active");
-        homeTab.classList.remove("active");
-        gamesTab.classList.remove("active");
-        searchTab.classList.remove("active");
-      }
-    });
-
-    // Handling chat input
-    document.getElementById("chatInput").addEventListener("keypress", function(event) {
-      if (event.key === "Enter" && this.value.trim() !== "") {
-        const newMessage = document.createElement("div");
-        newMessage.textContent = this.value;
-        document.getElementById("chatMessages").appendChild(newMessage);
-        this.value = ""; // clear the input
-      }
     });
   </script>
 </body>
