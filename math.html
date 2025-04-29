@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/x-icon" href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reynolds.k12.or.us%2Fdistrict%2Fschoology&psig=AOvVaw0eFu3UN_tu1TM-opJ_03eb&ust=1745927543770000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMjl1YrV-owDFQAAAAAdAAAAABAE">
+  <link rel="icon" type="image/x-icon" href="https://www.reynolds.k12.or.us/sites/default/files/styles/medium/public/images/schoology.png">
   <title>Home | Schoology</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
   <style>
@@ -111,7 +111,6 @@
       flex-direction: column;
       color: #00cc00;
       font-size: 2vw;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       z-index: 9999;
       backdrop-filter: blur(5px);
       visibility: visible;
@@ -122,9 +121,6 @@
     #loadingText {
       margin-bottom: 20px;
       font-size: 1.8vw;
-      color: #00cc00;
-      text-align: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       animation: fadeIn 1s ease;
     }
 
@@ -171,21 +167,17 @@
       display: block;
     }
 
-    #gamesContent.content-section {
+    #gamesContent.content-section,
+    #searchContent.content-section {
       position: absolute;
       width: 100vw;
       height: 100vh;
       background-color: #0d0d0d;
-      color: white;
       padding-top: 80px;
       box-sizing: border-box;
       overflow-y: auto;
       display: none;
       padding-bottom: 20px;
-    }
-
-    #gamesContent.content-section.active {
-      display: block;
     }
 
     .games-inner-wrapper {
@@ -322,7 +314,7 @@
   </div>
 
   <div class="nav-tabs">
-    <div class="nav-tab" id="homeTab"><i class="fas fa-home"></i> Home</div>
+    <div class="nav-tab active" id="homeTab"><i class="fas fa-home"></i> Home</div>
     <div class="nav-tab" id="gamesTab"><i class="fas fa-gamepad"></i> Games</div>
     <div class="nav-tab" id="searchTab"><i class="fas fa-search"></i> Search</div>
   </div>
@@ -335,7 +327,13 @@
     </div>
   </div>
 
-  <!-- Iframe Overlay for opening games -->
+  <!-- Search Section -->
+  <div id="searchContent" class="content-section">
+    <h2 style="color: white; font-size: 2vw;">Viper Search</h2>
+    <input type="text" class="search-bar" placeholder="Search the web..." />
+  </div>
+
+  <!-- Iframe Overlay -->
   <div id="iframeOverlay">
     <button id="closeGame">Close</button>
     <iframe id="gameIframe" src=""></iframe>
@@ -354,14 +352,12 @@
     ];
 
     window.onload = function () {
-      // Show each message every 2.5 seconds
       loadingMessages.forEach((msg, index) => {
         setTimeout(() => {
           loadingText.textContent = msg;
         }, index * 2500);
       });
 
-      // Hide overlay after 10 seconds
       setTimeout(() => {
         loadingOverlay.style.opacity = '0';
         setTimeout(() => {
@@ -435,9 +431,11 @@
     const gamesTab = document.getElementById("gamesTab");
     const searchTab = document.getElementById("searchTab");
     const gamesContent = document.getElementById("gamesContent");
+    const searchContent = document.getElementById("searchContent");
 
     homeTab.addEventListener("click", function () {
       gamesContent.classList.remove("active");
+      searchContent.classList.remove("active");
       homeTab.classList.add("active");
       gamesTab.classList.remove("active");
       searchTab.classList.remove("active");
@@ -445,9 +443,18 @@
 
     gamesTab.addEventListener("click", function () {
       gamesContent.classList.add("active");
+      searchContent.classList.remove("active");
       homeTab.classList.remove("active");
       gamesTab.classList.add("active");
       searchTab.classList.remove("active");
+    });
+
+    searchTab.addEventListener("click", function () {
+      searchContent.classList.add("active");
+      gamesContent.classList.remove("active");
+      homeTab.classList.remove("active");
+      gamesTab.classList.remove("active");
+      searchTab.classList.add("active");
     });
 
     const searchGames = document.getElementById('searchGames');
