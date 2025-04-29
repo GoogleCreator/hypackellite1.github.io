@@ -209,19 +209,63 @@
       margin: 0 auto;
     }
 
-    /* Search Content */
-    #searchContent.content-section {
-      padding-top: 80px;
+    .games-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1000px;
     }
 
-    #searchContent .search-bar {
-      width: 80%;
-      max-width: 500px;
-      margin: 20px auto;
+    .game-button {
+      display: inline-block;
+      cursor: pointer;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .game-button:hover {
+      transform: scale(1.05);
+    }
+
+    .image-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .image-wrapper img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 15px;
       display: block;
+      transition: all 0.3s ease;
     }
 
-    /* Iframe Overlay for opening games */
+    .game-button:hover img {
+      filter: blur(4px) brightness(0.7);
+    }
+
+    .game-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-shadow: 0 0 10px black;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .game-button:hover .game-title {
+      opacity: 1;
+    }
+
     #iframeOverlay {
       position: fixed;
       top: 0;
@@ -291,16 +335,17 @@
     </div>
   </div>
 
-  <!-- Search Section -->
-  <div id="searchContent" class="content-section">
-    <input type="text" class="search-bar" placeholder="Search the web..." />
-  </div>
-
   <!-- Iframe Overlay for opening games -->
   <div id="iframeOverlay">
     <button id="closeGame">Close</button>
     <iframe id="gameIframe" src=""></iframe>
   </div>
+
+  <!-- Search Section -->
+<div id="searchContent" class="content-section">
+  <input type="text" class="search-bar" placeholder="Search (no function yet)..." />
+</div>
+
 
   <script>
     const loadingOverlay = document.querySelector('.loading-overlay');
@@ -396,30 +441,39 @@
     const gamesTab = document.getElementById("gamesTab");
     const searchTab = document.getElementById("searchTab");
     const gamesContent = document.getElementById("gamesContent");
-    const searchContent = document.getElementById("searchContent");
 
-    homeTab.addEventListener("click", function () {
-      gamesContent.classList.remove("active");
-      searchContent.classList.remove("active");
-      homeTab.classList.add("active");
-      gamesTab.classList.remove("active");
-      searchTab.classList.remove("active");
-    });
+const searchContent = document.getElementById("searchContent");
 
-    gamesTab.addEventListener("click", function () {
-      gamesContent.classList.add("active");
-      searchContent.classList.remove("active");
-      homeTab.classList.remove("active");
-      gamesTab.classList.add("active");
-      searchTab.classList.remove("active");
-    });
+homeTab.addEventListener("click", function () {
+  gamesContent.classList.remove("active");
+  searchContent.classList.remove("active");
+  homeTab.classList.add("active");
+  gamesTab.classList.remove("active");
+  searchTab.classList.remove("active");
+});
 
-    searchTab.addEventListener("click", function () {
-      gamesContent.classList.remove("active");
-      searchContent.classList.add("active");
-      homeTab.classList.remove("active");
-      gamesTab.classList.remove("active");
-      searchTab.classList.add("active");
+gamesTab.addEventListener("click", function () {
+  gamesContent.classList.add("active");
+  searchContent.classList.remove("active");
+  homeTab.classList.remove("active");
+  gamesTab.classList.add("active");
+  searchTab.classList.remove("active");
+});
+
+searchTab.addEventListener("click", function () {
+  gamesContent.classList.remove("active");
+  searchContent.classList.add("active");
+  homeTab.classList.remove("active");
+  gamesTab.classList.remove("active");
+  searchTab.classList.add("active");
+});
+
+
+    const searchGames = document.getElementById('searchGames');
+    searchGames.addEventListener('input', function (event) {
+      const searchQuery = event.target.value.toLowerCase();
+      const filteredGames = games.filter(game => game.title.toLowerCase().includes(searchQuery));
+      renderGames(filteredGames);
     });
   </script>
 </body>
